@@ -5,43 +5,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Count Down Clock</title>
 </head>
 
 <body>
-    <div id="clockdiv"></div>
-    <br>
-    <!-- <div id="hour"></div>
-    <div id="minute"></div>
-    <div id="second"></div> -->
+    <div id="clockdiv">
+        <div>
+            <span class="days"></span>
+            <div class="text">Days</div>
+        </div>
+        <div>
+            <span class="hours"></span>
+            <div class="text">Hours</div>
+        </div>
+        <div>
+            <span class="minutes"></span>
+            <div class="text">Minutes</div>
+        </div>
+        <div>
+            <span class="seconds"></span>
+            <div class="text">Seconds</div>
+        </div>
+    </div>
+
+
 </body>
 
 <script>
-    let today = new Date();
-
-    // console.log(today.parse());
-    // let hours = today.getHours();
-    // let minutes = today.getMinutes();
-    // let seconds = today.getSeconds();
-
-    // document.getElementById('clock').innerHTML = today;
-
-    // document.getElementById('hour').innerHTML = hours;
-
-    // document.getElementById('minute').innerHTML = minutes;
-
-    // document.getElementById('second').innerHTML = seconds;
-
-    //Date.parse(new Date() = gets the total seconds
-
-
     const lastDay = '29 Jul 2021 16:45:00 GMT';
 
 
     const getTimeLeft = lastDay => {
         const total = Date.parse(lastDay) - Date.parse(new Date());
         const seconds = Math.floor((total / 1000) % 60); //seconds left after getting minutes
-        const minutes = Math.floor((total / 1000 / 60) % 60);//minutes left after getting hours
+        const minutes = Math.floor((total / 1000 / 60) % 60); //minutes left after getting hours
         const hours = Math.floor((total / 1000 / 60 / 60) % 24); //hours left after getting hours
         const days = Math.floor((total / 1000 / 60 / 60 / 24));
         return {
@@ -50,43 +48,46 @@
             hours,
             minutes,
             seconds
-         
+
 
         };
     }
 
 
-    // console.log('minutes:', getTimeLeft(lastDay).minutes);
-    // console.log('days:', getTimeLeft(lastDay).days);
-    // console.log('hours:', getTimeLeft(lastDay).hours);
-
     startClock = (id, lastDayDate) => {
         const clock = document.getElementById(
-        id); // use this  to store a reference to our clock container div. This means we don’t have to keep querying the DOM.
-        const timeinterval = setInterval(() => {
-           const time = getTimeLeft(lastDay);
-            clock.innerHTML = 'days:' + time.days + '<br>' +
-                'hours:' + time.hours + '<br>' +
-                'minutes:' + time.minutes + '<br>' +
-                'seconds:' + time.seconds + '<br>';
-                
+            id
+        ); // use this  to store a reference to our clock container div. This means we don’t have to keep querying the DOM.
 
-            if (time.total <= 0) {
-                clearInterval(timeinterval); //stops the function - clears the interval which has been set by setInterval()
-            }
+        const daysSpan = clock.querySelector('.days');
+        const hoursSpan = clock.querySelector('.hours');
+        const minutesSpan = clock.querySelector('.minutes');
+        const secondsSpan = clock.querySelector('.seconds');
 
-        }, 1000); //calls the function every second
 
+    function updateClock() {
+        const time = getTimeLeft(lastDay);
+
+        daysSpan.innerHTML = time.days;
+        hoursSpan.innerHTML = ('0' + time.hours).slice(-2);
+        minutesSpan.innerHTML = ('0' + time.minutes).slice(-2);
+        secondsSpan.innerHTML = ('0' + time.seconds).slice(-2);
+        if (time.total <= 0) {
+            clearInterval(timeinterval);
+        }
+    }
+
+    updateClock(); // run function once at first to avoid delay
+    const timeinterval = setInterval(updateClock, 1000);
 
     }
 
-    startClock('clockdiv',lastDay);
+    startClock('clockdiv', lastDay);
 </script>
 
 </html>
 
-<!-- var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds(); -->
+
 
 <!-- https://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
